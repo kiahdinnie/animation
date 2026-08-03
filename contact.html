@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — Your Name</title>
+  <meta name="description" content="Get in touch about animation, motion graphics, modelling, rigging and rendering work." />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <nav class="nav scrolled">
+    <a class="nav__brand" href="index.html"><span data-site="initials">KD</span></a>
+    <div class="nav__links">
+      <a href="index.html#work">Work</a>
+      <a href="about.html">About</a>
+      <a href="contact.html" aria-current="page">Contact</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="page wrap">
+      <h1 class="page__title">Let's work together<span>.</span></h1>
+
+      <div class="contact-grid">
+        <div>
+          <p class="contact-lead">
+            Available for freelance and full-time roles in animation, motion graphics
+            and 3D. The fastest way to reach me is email — I usually reply within a day.
+          </p>
+          <a class="contact-email-big" data-site="email" href="#">you@example.com</a>
+          <p data-site="location" class="muted" style="margin-top:1.5rem;color:var(--faint)"></p>
+        </div>
+
+        <ul class="contact-list">
+          <li>
+            <a data-site="email-href" href="#">
+              <span>Email</span><span class="arrow">→</span>
+            </a>
+          </li>
+          <li>
+            <a data-social="vimeo" href="#" target="_blank" rel="noopener" hidden>
+              <span>Vimeo</span><span class="arrow">→</span>
+            </a>
+          </li>
+          <li>
+            <a data-social="instagram" href="#" target="_blank" rel="noopener" hidden>
+              <span>Instagram</span><span class="arrow">→</span>
+            </a>
+          </li>
+          <li>
+            <a data-social="linkedin" href="#" target="_blank" rel="noopener" hidden>
+              <span>LinkedIn</span><span class="arrow">→</span>
+            </a>
+          </li>
+          <li>
+            <a data-social="youtube" href="#" target="_blank" rel="noopener" hidden>
+              <span>YouTube</span><span class="arrow">→</span>
+            </a>
+          </li>
+          <li>
+            <a data-social="artstation" href="#" target="_blank" rel="noopener" hidden>
+              <span>ArtStation</span><span class="arrow">→</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <footer class="footer wrap">
+      <span>© <span data-site="year" data-year="2026">2026</span> <span data-site="name">Your Name</span></span>
+      <a data-site="email" data-label="Get in touch" href="#">Get in touch</a>
+    </footer>
+  </main>
+
+  <!-- Sticky contact banner (kept here too, for consistency across the site) -->
+  <div class="cbanner" id="cbanner">
+    <span class="cbanner__msg"><span class="dot"></span>Available for work — let's talk</span>
+    <div class="cbanner__actions">
+      <a class="primary" data-site="email" data-label="Email me" href="#">Email me</a>
+      <a data-social="vimeo" href="#" target="_blank" rel="noopener" hidden>Vimeo</a>
+      <a data-social="instagram" href="#" target="_blank" rel="noopener" hidden>Instagram</a>
+      <a data-social="linkedin" href="#" target="_blank" rel="noopener" hidden>LinkedIn</a>
+    </div>
+    <button class="cbanner__close" aria-label="Dismiss banner">&times;</button>
+  </div>
+
+  <script src="content.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Name — Animation & Motion Graphics</title>
+  <meta name="description" content="Portfolio of animation, motion graphics, modelling, rigging and rendering work." />
+
+  <!-- Open Graph (how the link looks when shared) -->
+  <meta property="og:title" content="Your Name — Animation & Motion Graphics" />
+  <meta property="og:description" content="Animation, motion graphics, modelling, rigging, rendering." />
+  <meta property="og:type" content="website" />
+
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- Top navigation -->
+  <nav class="nav">
+    <a class="nav__brand" href="index.html"><span data-site="initials">KD</span></a>
+    <div class="nav__links">
+      <a href="index.html#work" aria-current="page">Work</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero__inner">
+      <h1 class="hero__name" data-site="name">Your Name</h1>
+      <p class="hero__tag" data-site="tagline">Animation, motion graphics, modelling, rigging, rendering.</p>
+    </div>
+    <a class="scroll-cue" href="#work" aria-label="Scroll down to see the work">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="12" y1="4" x2="12" y2="19" />
+        <polyline points="6 13 12 19 18 13" />
+      </svg>
+    </a>
+  </header>
+
+  <!-- Work / reel feed -->
+  <main>
+    <section id="work" class="work">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Selected Work</h2>
+          <span class="count" data-count></span>
+        </div>
+        <div id="reel-feed" class="feed"><!-- videos injected from content.js --></div>
+      </div>
+    </section>
+
+    <footer class="footer wrap">
+      <span>© <span data-site="year" data-year="2026">2026</span> <span data-site="name">Your Name</span></span>
+      <a data-site="email" data-label="Get in touch" href="#">Get in touch</a>
+    </footer>
+  </main>
+
+  <!-- Sticky contact banner -->
+  <div class="cbanner" id="cbanner">
+    <span class="cbanner__msg"><span class="dot"></span>Available for work — let's talk</span>
+    <div class="cbanner__actions">
+      <a class="primary" data-site="email" data-label="Email me" href="#">Email me</a>
+      <a data-social="vimeo" href="#" target="_blank" rel="noopener" hidden>Vimeo</a>
+      <a data-social="instagram" href="#" target="_blank" rel="noopener" hidden>Instagram</a>
+      <a data-social="linkedin" href="#" target="_blank" rel="noopener" hidden>LinkedIn</a>
+    </div>
+    <button class="cbanner__close" aria-label="Dismiss banner">&times;</button>
+  </div>
+
+  <script src="content.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
