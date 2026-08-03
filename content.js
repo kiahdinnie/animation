@@ -19,7 +19,7 @@
 
 window.SITE = {
   // ---- YOU ------------------------------------------------------------------
-  name: "Your Name",                    // <-- put your name here
+  name: "Kiah Dinnie",                  // <-- put your name here
   tagline: "Animation, motion graphics, modelling, rigging, rendering.",
 
   // ---- CONTACT (used by the bottom banner, the contact page and the footer) --
@@ -54,32 +54,26 @@ window.SITE = {
   },
 
   // ---- YOUR VIDEOS ----------------------------------------------------------
-  // These are SAMPLES so you can see the layout working. Replace them with your
-  // own Vimeo links. Add or remove { } blocks freely.
+  // Add or remove { } blocks freely. "orientation" can be "landscape",
+  // "portrait" or "square".
   videos: [
     {
-      url: "https://vimeo.com/76979871",
-      title: "Showreel 2025",
-      description: "A 90-second cut of my best recent work — animation, motion graphics and 3D.",
+      url: "https://vimeo.com/1152648913",
+      title: "Animation Showreel",
+      description: "A 60-second cut of my animations from Netflix, Showmax, various advertising spots, and a short film.",
       orientation: "landscape"
     },
     {
-      url: "https://vimeo.com/76979871",
-      title: "Character Rig & Animation",
-      description: "Full body rig and a walk-cycle test. Blender + custom controls.",
-      orientation: "portrait"
-    },
-    {
-      url: "https://vimeo.com/76979871",
-      title: "Product Render",
-      description: "Lighting and look-dev study, rendered in Cycles.",
+      url: "https://vimeo.com/1155750523",
+      title: "Motion Graphics and Product Visualization",
+      description: "I produced all elements of these shots using Blender, After Effects, Photoshop, and Illustrator.",
       orientation: "landscape"
     },
     {
-      url: "https://vimeo.com/76979871",
-      title: "Motion Graphics Loop",
-      description: "Seamless looping title sequence built in After Effects.",
-      orientation: "square"
+      url: "https://vimeo.com/1201552967",
+      title: "Character sculpting and Rigging",
+      description: "Characters sculpted in Blender and rigged in both Blender and Autodesk Maya.",
+      orientation: "landscape"
     }
   ]
 };

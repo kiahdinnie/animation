@@ -148,6 +148,40 @@ a { color: inherit; text-decoration: none; }
   color: var(--muted);
 }
 
+/* --- decorative dotted name treatment (the i's in Kiah Dinnie) --- */
+.hero__name .word { display: inline-block; }
+.hero__name .imark {
+  position: relative;
+  display: inline-block;
+  /* the h1's gradient text-clip doesn't paint through this inline-block,
+     so give the i-stem an explicit near-white fill instead of transparent */
+  color: #ececf1;
+  -webkit-text-fill-color: #ececf1;
+}
+.hero__name .dot {
+  position: absolute;
+  left: 50%;
+  width: 0.14em;
+  height: 0.14em;
+  border-radius: 50%;
+  line-height: 0;
+}
+/* two dots ABOVE the dotless i in "Kiah" */
+.hero__name .imark--top .dot        { top: -0.01em; }
+.hero__name .imark--top .dot--red   { margin-left: -0.17em; }
+.hero__name .imark--top .dot--orange{ margin-left:  0.03em; }
+/* three dots BELOW the second i in "Dinnie" */
+.hero__name .imark--bottom .dot         { top: 0.86em; }
+.hero__name .imark--bottom .dot--yellow { margin-left: -0.27em; }
+.hero__name .imark--bottom .dot--green  { margin-left: -0.07em; }
+.hero__name .imark--bottom .dot--blue   { margin-left:  0.13em; }
+
+.dot--red    { background: #ff2d2d; }
+.dot--orange { background: #ff7a00; }
+.dot--yellow { background: #ffd21e; }
+.dot--green  { background: #34c759; }
+.dot--blue   { background: #2f8bff; }
+
 /* big red scroll arrow */
 .scroll-cue {
   position: absolute;

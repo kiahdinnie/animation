@@ -33,14 +33,14 @@
   function backgroundSrc(v) {
     var h = v.hash ? "&h=" + v.hash : "";
     return "https://player.vimeo.com/video/" + v.id +
-           "?background=1&autoplay=1&loop=1&muted=1&autopause=0&dnt=1" + h;
+           "?background=1&autoplay=1&loop=1&muted=1&autopause=0&dnt=1&app_id=58479" + h;
   }
 
   // Full player (sound + controls) for the lightbox.
   function fullSrc(v) {
     var h = v.hash ? "&h=" + v.hash : "";
     return "https://player.vimeo.com/video/" + v.id +
-           "?autoplay=1&title=0&byline=0&portrait=0&dnt=1" + h;
+           "?autoplay=1&title=0&byline=0&portrait=0&dnt=1&app_id=58479" + h;
   }
 
   function el(tag, cls, html) {
