@@ -26,12 +26,21 @@ window.SITE = {
   // Flip the whole site between the light and dark palette with one word:
   theme: "light",                       // "light"  or  "dark"
 
-  // The first panel (the name screen). Choose what sits behind your name:
+  // A video that plays behind the WHOLE site (an mp4 in /assets, or a Vimeo link).
+  // Leave "" to use the colourful gradient mesh instead.
+  pageVideo: "assets/background.mp4",
+
+  // The first panel (the name screen).
   hero: {
+    // An animated title video shown at the top (a black background is dropped
+    // automatically). Leave "" to use the typed name with the coloured dots.
+    title: "assets/title.mp4",
+
+    // What sits behind the title — only used if pageVideo above is "".
     background: "gradient",             // "gradient" | "image" | "video"
-    image: "assets/hero.jpg",           // used when background is "image" — drop a file in /assets
-    video: "",                          // used when background is "video" — paste a Vimeo link (plays muted, looping)
-    dim: 0.4                            // 0–1: how much to fade an image/video so the name stays readable
+    image: "assets/hero.jpg",           // used when background is "image"
+    video: "",                          // used when background is "video" — a Vimeo link
+    dim: 0.4                            // 0–1: fades an image/video hero so the name stays readable
   },
 
   // ---- CONTACT (used by the bottom banner, the contact page and the footer) --

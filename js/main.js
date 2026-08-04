@@ -324,38 +324,82 @@
     document.documentElement.setAttribute("data-theme", theme);
   }
 
-  // The hero panel: "gradient" (default page mesh), a custom "image", or a
-  // looping "video". Controlled from SITE.hero in content.js.
-  function buildHero() {
-    var bg = document.getElementById("hero-bg");
-    if (!bg) return;
-    var h = SITE.hero || {};
-    var type = (h.background || "gradient").toLowerCase();
-    var dim = (h.dim != null) ? h.dim : 0.4;
+  // Is this a Vimeo link/id rather than a local file?
+  function isVimeo(src) {
+    return /vimeo\.com|player\.vimeo/.test(src) || /^\d{6,}$/.test(String(src).trim());
+  }
 
-    if (type === "image" && h.image) {
-      bg.classList.add("hero__bg--media");
-      bg.style.backgroundImage = "url('" + h.image + "')";
-      bg.style.setProperty("--hero-dim", dim);
-    } else if (type === "video" && h.video) {
-      var v = parseVimeo(h.video);
-      if (v.id) {
-        var iframe = document.createElement("iframe");
-        iframe.src = backgroundSrc(v);
-        iframe.allow = "autoplay; fullscreen; picture-in-picture";
-        iframe.setAttribute("aria-hidden", "true");
-        iframe.setAttribute("tabindex", "-1");
-        bg.appendChild(iframe);
-        bg.style.setProperty("--hero-dim", dim);
+  // A muted, looping, autoplay background element — a local <video> or a Vimeo embed.
+  function makeBgMedia(src) {
+    if (isVimeo(src)) {
+      var v = parseVimeo(src);
+      if (!v.id) return null;
+      var wrap = document.createElement("div");
+      wrap.className = "bg-embed";
+      var iframe = document.createElement("iframe");
+      iframe.src = backgroundSrc(v);
+      iframe.allow = "autoplay; fullscreen; picture-in-picture";
+      iframe.setAttribute("aria-hidden", "true");
+      iframe.setAttribute("tabindex", "-1");
+      wrap.appendChild(iframe);
+      return wrap;
+    }
+    var video = document.createElement("video");
+    video.src = src;
+    video.autoplay = true; video.loop = true; video.muted = true; video.playsInline = true;
+    video.setAttribute("muted", "");
+    video.setAttribute("playsinline", "");
+    video.setAttribute("aria-hidden", "true");
+    return video;
+  }
+
+  // A video (or Vimeo) that plays behind the entire site. From SITE.pageVideo.
+  function buildPageBackground() {
+    if (!SITE.pageVideo) return;
+    var el = makeBgMedia(SITE.pageVideo);
+    if (!el) return;
+    var layer = document.createElement("div");
+    layer.className = "page-video" + (el.className === "bg-embed" ? " page-video--embed" : "");
+    layer.appendChild(el);
+    document.body.appendChild(layer);
+  }
+
+  // The hero: an optional animated title video (its black bg is dropped via a CSS
+  // screen blend), plus — only when there's no full-page video — a panel background.
+  function buildHero() {
+    var h = SITE.hero || {};
+
+    var titleHost = document.getElementById("hero-title");
+    if (titleHost && h.title) {
+      var tv = makeBgMedia(h.title);
+      if (tv) {
+        tv.classList.add("hero__title-video");
+        titleHost.appendChild(tv);
+        var heroEl = document.querySelector(".hero");
+        if (heroEl) heroEl.classList.add("has-title");
       }
     }
-    /* "gradient" (or unset) → leave empty so the full-page colour mesh shows */
+
+    var bg = document.getElementById("hero-bg");
+    if (bg && !SITE.pageVideo) {
+      var type = (h.background || "gradient").toLowerCase();
+      var dim = (h.dim != null) ? h.dim : 0.4;
+      if (type === "image" && h.image) {
+        bg.classList.add("hero__bg--media");
+        bg.style.backgroundImage = "url('" + h.image + "')";
+        bg.style.setProperty("--hero-dim", dim);
+      } else if (type === "video" && h.video) {
+        var el = makeBgMedia(h.video);
+        if (el) { bg.appendChild(el); bg.style.setProperty("--hero-dim", dim); }
+      }
+    }
   }
 
   /* ---- Go ----------------------------------------------------------------- */
 
   function init() {
     applyTheme();
+    buildPageBackground();
     fillContent();
     buildFeed();
     buildHero();
