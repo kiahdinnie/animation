@@ -253,8 +253,17 @@ body::before {
   object-fit: contain;
   mix-blend-mode: screen;
 }
-/* the title clip has its own scroll arrow, so hide the site's when it's active */
-.hero.has-title .scroll-cue { display: none; }
+/* the title clip has its own arrow — turn the site's scroll link into an
+   invisible hit box sitting over it, so clicking it still scrolls to the work */
+.hero.has-title .scroll-cue {
+  bottom: auto;
+  top: 62%;
+  width: clamp(160px, 24vw, 340px);
+  height: clamp(130px, 28vh, 260px);
+  animation: none;
+  z-index: 4;
+}
+.hero.has-title .scroll-cue svg { display: none; }
 /* when the title video is present, keep the typed name in the DOM for
    screen-readers / SEO but hide it visually */
 .hero.has-title .hero__name,
@@ -393,6 +402,9 @@ body::before {
   height: 100%;
   border: 0;
 }
+/* the feed video is a preview only — let clicks pass through it to the
+   .reel__media handler so "tap to enlarge" opens the lightbox */
+.reel__frame iframe { pointer-events: none; }
 .placeholder {
   display: grid;
   place-items: center;
