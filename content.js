@@ -22,6 +22,18 @@ window.SITE = {
   name: "Kiah Dinnie",                  // <-- put your name here
   tagline: "Animation, motion graphics, modelling, rigging, rendering.",
 
+  // ---- LOOK & FEEL ----------------------------------------------------------
+  // Flip the whole site between the light and dark palette with one word:
+  theme: "light",                       // "light"  or  "dark"
+
+  // The first panel (the name screen). Choose what sits behind your name:
+  hero: {
+    background: "gradient",             // "gradient" | "image" | "video"
+    image: "assets/hero.jpg",           // used when background is "image" — drop a file in /assets
+    video: "",                          // used when background is "video" — paste a Vimeo link (plays muted, looping)
+    dim: 0.4                            // 0–1: how much to fade an image/video so the name stays readable
+  },
+
   // ---- CONTACT (used by the bottom banner, the contact page and the footer) --
   email: "you@example.com",             // <-- your email
   location: "",                         // optional, e.g. "London, UK" (leave "" to hide)

@@ -317,11 +317,48 @@
     }
   }
 
+  /* ---- Theme + hero asset ------------------------------------------------- */
+
+  function applyTheme() {
+    var theme = (SITE.theme === "dark") ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", theme);
+  }
+
+  // The hero panel: "gradient" (default page mesh), a custom "image", or a
+  // looping "video". Controlled from SITE.hero in content.js.
+  function buildHero() {
+    var bg = document.getElementById("hero-bg");
+    if (!bg) return;
+    var h = SITE.hero || {};
+    var type = (h.background || "gradient").toLowerCase();
+    var dim = (h.dim != null) ? h.dim : 0.4;
+
+    if (type === "image" && h.image) {
+      bg.classList.add("hero__bg--media");
+      bg.style.backgroundImage = "url('" + h.image + "')";
+      bg.style.setProperty("--hero-dim", dim);
+    } else if (type === "video" && h.video) {
+      var v = parseVimeo(h.video);
+      if (v.id) {
+        var iframe = document.createElement("iframe");
+        iframe.src = backgroundSrc(v);
+        iframe.allow = "autoplay; fullscreen; picture-in-picture";
+        iframe.setAttribute("aria-hidden", "true");
+        iframe.setAttribute("tabindex", "-1");
+        bg.appendChild(iframe);
+        bg.style.setProperty("--hero-dim", dim);
+      }
+    }
+    /* "gradient" (or unset) → leave empty so the full-page colour mesh shows */
+  }
+
   /* ---- Go ----------------------------------------------------------------- */
 
   function init() {
+    applyTheme();
     fillContent();
     buildFeed();
+    buildHero();
     buildAbout();
     initChrome();
   }

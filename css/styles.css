@@ -3,22 +3,74 @@
    Dark, cinematic portfolio theme built to make video pop.
    ========================================================================== */
 
-/* ---- Design tokens -------------------------------------------------------- */
-:root {
-  --bg:        #0a0a0c;
-  --bg-soft:   #101013;
-  --card:      #141418;
-  --card-hover:#191920;
-  --border:    #26262e;
-  --text:      #f4f4f6;
-  --muted:     #9b9ba6;
-  --faint:     #6a6a75;
-  --accent:    #ff2d2d;   /* the signature red */
-  --accent-2:  #ff5a4d;
+/* ============================================================================
+   THEME TOKENS — the main knobs for the whole site's look.
+   • To switch light ⇄ dark: set  theme: "light"  or  "dark"  in content.js
+     (no need to edit anything here).
+   • To recolour: change --accent (buttons/arrow), --name-* (the big name),
+     or --page-mesh (the colourful background) below.
+   ========================================================================== */
+:root {                               /* ---------- LIGHT (default) ---------- */
+  --bg:          #f4f3f8;   /* page base colour, under the colour mesh */
+  --bg-soft:     #ffffff;
+  --card:        #ffffff;   /* the panel each video sits on */
+  --card-hover:  #f6f6fb;
+  --border:      #e4e2ee;
+  --text:        #191822;   /* main text */
+  --text-soft:   #3d3c4a;   /* captions & body copy */
+  --muted:       #5f5e6d;   /* secondary text */
+  --faint:       #9896a6;
+  --accent:      #ff2d2d;   /* signature colour — buttons, arrow, highlights */
+  --accent-2:    #e21f1f;
+
+  --name-1:      #17161d;   /* the big name — gradient top */
+  --name-2:      #46444f;   /* the big name — gradient bottom */
+  --name-solid:  #201f28;   /* the i-stems in the name */
+  --name-shadow: rgba(0, 0, 0, .14);
+
+  --surface-blur: rgba(255, 255, 255, .80);   /* frosted nav + contact banner */
+  --hero-scrim:  245, 244, 248;               /* = --bg as R,G,B (for image/video heroes) */
+
+  /* the full-page colour mesh — original artwork; swap freely for any look */
+  --page-mesh:
+    radial-gradient(38% 34% at 10% 8%,  rgba(255, 133, 199, .45), transparent 60%),
+    radial-gradient(40% 36% at 90% 12%, rgba(168, 150, 255, .42), transparent 62%),
+    radial-gradient(44% 40% at 90% 90%, rgba(120, 225, 215, .40), transparent 60%),
+    radial-gradient(44% 40% at 8% 92%,  rgba(255, 205, 130, .42), transparent 58%),
+    radial-gradient(78% 62% at 50% 50%, rgba(200, 210, 255, .30), transparent 72%),
+    linear-gradient(155deg, #f2ecfb 0%, #edf1fc 55%, #fbf0ea 100%);
+
   --radius:    16px;
   --maxw:      1180px;
   --banner-h:  56px;
   --font:      "Space Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+:root[data-theme="dark"] {            /* ---------- DARK ---------- */
+  --bg:          #0a0a0c;
+  --bg-soft:     #101013;
+  --card:        #141418;
+  --card-hover:  #191920;
+  --border:      #26262e;
+  --text:        #f4f4f6;
+  --text-soft:   rgba(255, 255, 255, .84);
+  --muted:       #9b9ba6;
+  --faint:       #6a6a75;
+  --accent:      #ff2d2d;
+  --accent-2:    #ff5a4d;
+  --name-1:      #ffffff;
+  --name-2:      #d7d7e2;
+  --name-solid:  #ececf1;
+  --name-shadow: rgba(0, 0, 0, .40);
+  --surface-blur: rgba(12, 12, 15, .82);
+  --hero-scrim:  10, 10, 12;
+  --page-mesh:
+    radial-gradient(38% 34% at 10% 8%,  rgba(236, 33, 150, .55), transparent 60%),
+    radial-gradient(40% 36% at 90% 12%, rgba(128, 51, 245, .50), transparent 62%),
+    radial-gradient(44% 40% at 90% 90%, rgba(20, 200, 190, .45), transparent 60%),
+    radial-gradient(44% 40% at 8% 92%,  rgba(255, 176, 38, .42), transparent 58%),
+    radial-gradient(78% 62% at 50% 50%, rgba(52, 70, 232, .34), transparent 72%),
+    linear-gradient(155deg, #22155d 0%, #180f47 55%, #130d33 100%);
 }
 
 /* ---- Reset ---------------------------------------------------------------- */
@@ -65,7 +117,7 @@ a { color: inherit; text-decoration: none; }
   border-bottom: 1px solid transparent;
 }
 .nav.scrolled {
-  background: rgba(10, 10, 12, .72);
+  background: var(--surface-blur);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-bottom-color: var(--border);
@@ -117,14 +169,32 @@ body::before {
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background:
-    radial-gradient(38% 34% at 10% 8%,  rgba(236, 33, 150, .55), transparent 60%),  /* magenta  */
-    radial-gradient(40% 36% at 90% 12%, rgba(128, 51, 245, .50), transparent 62%),  /* violet   */
-    radial-gradient(44% 40% at 90% 90%, rgba(20, 200, 190, .45), transparent 60%),  /* teal     */
-    radial-gradient(44% 40% at 8% 92%,  rgba(255, 176, 38, .42), transparent 58%),  /* gold     */
-    radial-gradient(78% 62% at 50% 50%, rgba(52, 70, 232, .34), transparent 72%),   /* cobalt centre */
-    linear-gradient(155deg, #22155d 0%, #180f47 55%, #130d33 100%);                 /* deep base */
+  background: var(--page-mesh);
 }
+/* optional hero background asset (image or video) — sits above the page mesh,
+   below the name. Empty by default, so the page mesh shows through. */
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+.hero__bg--media { background-size: cover; background-position: center; }
+.hero__bg iframe {                     /* background video, scaled to cover */
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 100vw; height: 56.25vw;
+  min-width: 177.78vh; min-height: 100vh;
+  transform: translate(-50%, -50%);
+  border: 0; pointer-events: none;
+}
+.hero__bg::after {                     /* legibility scrim; strength set inline via --hero-dim */
+  content: "";
+  position: absolute; inset: 0;
+  background: rgba(var(--hero-scrim), 1);
+  opacity: var(--hero-dim, 0);
+}
+
 .hero__inner { position: relative; z-index: 2; }
 .hero__name {
   margin: 0;
@@ -132,19 +202,18 @@ body::before {
   letter-spacing: -0.03em;
   line-height: .95;
   font-size: clamp(3.2rem, 13vw, 9.5rem);
-  background: linear-gradient(180deg, #ffffff 0%, #d7d7e2 100%);
+  background: linear-gradient(180deg, var(--name-1) 0%, var(--name-2) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 3px 26px rgba(0, 0, 0, .38));
+  filter: drop-shadow(0 3px 26px var(--name-shadow));
 }
 .hero__tag {
   margin: 1.4rem auto 0;
   max-width: 40ch;
   font-size: clamp(1.05rem, 2.6vw, 1.6rem);
   font-weight: 400;
-  color: rgba(255, 255, 255, .85);
-  text-shadow: 0 1px 20px rgba(0, 0, 0, .35);
+  color: var(--text-soft);
 }
 
 /* --- decorative dotted name treatment (the i's in Kiah Dinnie) --- */
@@ -156,9 +225,9 @@ body::before {
   position: relative;
   display: inline-block;
   /* the h1's gradient text-clip doesn't paint through this inline-block,
-     so give the i-stem an explicit near-white fill instead of transparent */
-  color: #ececf1;
-  -webkit-text-fill-color: #ececf1;
+     so give the i-stem an explicit fill instead of transparent */
+  color: var(--name-solid);
+  -webkit-text-fill-color: var(--name-solid);
 }
 .hero__name .dot {
   position: absolute;
@@ -256,8 +325,8 @@ body::before {
 }
 .reel__media:hover {
   transform: translateY(-4px);
-  border-color: #3a3a46;
-  box-shadow: 0 34px 70px -28px rgba(0, 0, 0, .9);
+  border-color: var(--muted);
+  box-shadow: 0 34px 70px -28px rgba(0, 0, 0, .5);
 }
 /* aspect ratios per orientation */
 .reel__frame { position: relative; width: 100%; }
@@ -279,8 +348,7 @@ body::before {
 .placeholder {
   display: grid;
   place-items: center;
-  background:
-    radial-gradient(circle at 50% 40%, #22222b, #0f0f13);
+  background: var(--card-hover);
   color: var(--faint);
 }
 .placeholder svg { width: 46px; height: 46px; opacity: .5; }
@@ -321,7 +389,7 @@ body::before {
   font-weight: 700;
   letter-spacing: -0.01em;
 }
-.reel__text p { margin: 0; color: rgba(255, 255, 255, .82); font-size: 1.02rem; }
+.reel__text p { margin: 0; color: var(--text-soft); font-size: 1.02rem; }
 
 /* ---- Generic page content (about / contact) ------------------------------- */
 .page { padding: clamp(7rem, 14vh, 10rem) 0 5rem; }
@@ -344,8 +412,7 @@ body::before {
   border-radius: var(--radius);
   overflow: hidden;
   border: 1px solid var(--border);
-  background:
-    radial-gradient(circle at 50% 35%, #24242d, #101014);
+  background: var(--card-hover);
   aspect-ratio: 4 / 5;
 }
 .about__photo img { width: 100%; height: 100%; object-fit: cover; }
@@ -354,7 +421,7 @@ body::before {
   display: grid; place-items: center;
   color: var(--faint); text-align: center; padding: 1rem; font-size: .9rem;
 }
-.about__body p { font-size: 1.1rem; color: #d9d9e0; margin: 0 0 1.2rem; }
+.about__body p { font-size: 1.1rem; color: var(--text-soft); margin: 0 0 1.2rem; }
 .about__body p:first-child { font-size: 1.25rem; color: var(--text); }
 
 .tags { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 2rem; }
@@ -374,7 +441,7 @@ body::before {
   gap: clamp(2rem, 5vw, 4rem);
   align-items: start;
 }
-.contact-lead { font-size: 1.25rem; color: #d9d9e0; max-width: 40ch; }
+.contact-lead { font-size: 1.25rem; color: var(--text-soft); max-width: 40ch; }
 .contact-list { list-style: none; padding: 0; margin: 2rem 0 0; display: grid; gap: 1rem; }
 .contact-list a {
   display: flex;
@@ -417,7 +484,7 @@ body::before {
   gap: clamp(.75rem, 3vw, 2rem);
   flex-wrap: wrap;
   padding: .5rem clamp(1rem, 4vw, 2.5rem);
-  background: rgba(14, 14, 17, .92);
+  background: var(--surface-blur);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-top: 1px solid var(--border);
