@@ -44,14 +44,14 @@ window.SITE = {
   },
 
   // ---- CONTACT (used by the bottom banner, the contact page and the footer) --
-  email: "you@example.com",             // <-- your email
+  email: "kiahdinnie@gmail.com",        // <-- your email
   location: "",                         // optional, e.g. "London, UK" (leave "" to hide)
 
   socials: {
     // Leave any line as "" to hide that link.
-    vimeo: "https://vimeo.com/yourname",
+    vimeo: "https://vimeo.com/kiahdinnie",
     instagram: "",
-    linkedin: "",
+    linkedin: "https://www.linkedin.com/in/kiah-dinnie/",
     youtube: "",
     artstation: ""
   },
