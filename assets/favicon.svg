@@ -1,4 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="14" fill="#0a0a0c"/>
-  <path d="M26 20 L46 32 L26 44 Z" fill="#ff2d2d"/>
+  <rect width="64" height="64" rx="14" fill="#f4f3f8"/>
+  <text x="32" y="34" text-anchor="middle" dominant-baseline="central"
+        font-family="'Space Grotesk', system-ui, 'Helvetica Neue', Arial, sans-serif"
+        font-size="30" font-weight="700" letter-spacing="-1.5" fill="#191822">KD</text>
 </svg>
