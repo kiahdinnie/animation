@@ -63,11 +63,11 @@ window.SITE = {
     photo: "assets/profile.jpg",
     // Each string below becomes its own paragraph. Write as many as you like.
     paragraphs: [
-      "Hi! I'm Kiah Dinnie. An animator, motion graphics artist, and 3D generalist based in Johannesburg, South Africa. My passion is in storytelling through motion. I love creating characters and bringing them to life through animation. ",
+      "Hi! I'm Kiah Dinnie. An animator, motion graphics artist, and 3D generalist based in Johannesburg, South Africa. My passion is in storytelling through motion. I love creating characters and bringing them to life through animation.",
       "I cut my teeth as a 3D artist but I now work in both 2D and 3D. I'm proficient with After Effects, Blender, Autodesk Maya, and Photoshop. I can design, model, rig, animate, render, and composite.",
-      "I'm available for freelance work or full-time and am willing to relocate.
-No project is too big or too small.
-Let's work together!"
+      "I'm available for freelance work or full-time and am willing to relocate.",
+      "No project is too big or too small.",
+      "Let's work together!"
     ],
     // Optional skills list — shown as tags. Delete any you don't want.
     skills: [
