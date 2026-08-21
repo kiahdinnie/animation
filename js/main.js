@@ -148,6 +148,8 @@
     var frame = el("div", "reel__frame");
     frame.appendChild(el("div", "placeholder", PLAY_ICON));
     frame.dataset.src = backgroundSrc(parsed);   // lazy-loaded when scrolled near
+    frame.dataset.provider = parsed.provider;
+    if (parsed.provider === "youtube") frame.dataset.vid = parsed.id;
     media.appendChild(frame);
     if (wantHint) media.appendChild(el("span", "zoom-hint", ENLARGE_ICON + " Tap to enlarge"));
 
@@ -248,6 +250,7 @@
   function loadFrame(frame) {
     if (!frame || frame.dataset.loaded) return;
     frame.dataset.loaded = "1";
+    if (frame.dataset.provider === "youtube") { loadYouTubeBg(frame, frame.dataset.vid); return; }
     var iframe = document.createElement("iframe");
     iframe.src = frame.dataset.src;
     iframe.loading = "lazy";
@@ -256,6 +259,61 @@
     iframe.setAttribute("tabindex", "-1");
     iframe.setAttribute("aria-hidden", "true");
     frame.appendChild(iframe);
+  }
+
+  /* ---- YouTube background players: seamless loop via the IFrame API -------
+     Plain "loop=1&playlist=ID" reloads the clip each cycle (black flash + the
+     play button reappears). Instead we drive it with the API and seek back to
+     the start just before the end, so it never reloads or shows the end-screen. */
+  var _ytQueue = [];
+  function loadYT(cb) {
+    if (window.YT && window.YT.Player) { cb(); return; }
+    _ytQueue.push(cb);
+    if (_ytQueue.length === 1) {
+      var s = document.createElement("script");
+      s.src = "https://www.youtube.com/iframe_api";
+      document.head.appendChild(s);
+      var prev = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = function () {
+        if (typeof prev === "function") { try { prev(); } catch (e) {} }
+        _ytQueue.forEach(function (f) { f(); });
+        _ytQueue = [];
+      };
+    }
+  }
+
+  function loadYouTubeBg(frame, id) {
+    var mount = document.createElement("div");   // the API replaces this with the iframe
+    frame.appendChild(mount);
+    loadYT(function () {
+      /* global YT */
+      new YT.Player(mount, {
+        videoId: id,
+        width: "100%", height: "100%",
+        playerVars: {
+          autoplay: 1, mute: 1, controls: 0, playsinline: 1,
+          modestbranding: 1, rel: 0, disablekb: 1, fs: 0,
+          iv_load_policy: 3, origin: location.origin
+        },
+        events: {
+          onReady: function (e) { e.target.mute(); e.target.playVideo(); loopWatch(e.target); },
+          onStateChange: function (e) {
+            if (e.data === YT.PlayerState.ENDED) { e.target.seekTo(0, true); e.target.playVideo(); }
+          }
+        }
+      });
+    });
+  }
+
+  // Restart a hair before the end so YouTube never shows its end-screen / reload flash.
+  function loopWatch(player) {
+    var timer = setInterval(function () {
+      try {
+        var d = player.getDuration ? player.getDuration() : 0;
+        var t = player.getCurrentTime ? player.getCurrentTime() : 0;
+        if (d > 0 && t >= d - 0.4) player.seekTo(0, true);
+      } catch (e) { clearInterval(timer); }
+    }, 250);
   }
 
   /* ---- Lightbox ----------------------------------------------------------- */
