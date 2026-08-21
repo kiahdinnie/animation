@@ -165,7 +165,6 @@
     var orient = normOrient(item.orientation);
     var reel = el("article", "reel is-" + orient + (i % 2 ? " alt" : ""));
     var text = el("div", "reel__text");
-    text.appendChild(el("h3", null, escapeHtml(item.title || "Untitled")));
     if (item.description) text.appendChild(el("p", null, escapeHtml(item.description)));
     reel.appendChild(buildMedia(item, parsed, orient, true));
     reel.appendChild(text);

@@ -87,11 +87,13 @@ window.SITE = {
         { url: "https://youtube.com/shorts/dwhpOgz4q0w", title: "Red Bull",             orientation: "portrait" },
         { url: "https://youtube.com/shorts/uMaUt9zilvs", title: "Ma Mère",              orientation: "portrait" },
         { url: "https://youtube.com/shorts/XAAuGHMGWlI", title: "Juicy Bomb Lip Gloss", orientation: "portrait" },
-        { url: "https://youtube.com/shorts/fe8enWwr6XM", title: "Coca-Cola",            orientation: "portrait" }
+        { url: "https://youtube.com/shorts/fe8enWwr6XM", title: "Coca-Cola",            orientation: "portrait" },
+        { url: "https://youtu.be/2q55jGEIXiM",           title: "KitchenAid",           orientation: "landscape" },
+        { url: "https://youtu.be/zMzXBJguh6o",           title: "Cadbury",              orientation: "landscape" }
       ]
     },
     {
-      title: "Animation",
+      title: "3D Animation",
       style: "feature",
       videos: [
         {
@@ -103,7 +105,7 @@ window.SITE = {
       ]
     },
     {
-      title: "Rigging",
+      title: "Character sculpting and Rigging",
       style: "feature",
       videos: [
         {

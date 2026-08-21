@@ -405,19 +405,11 @@ body::before {
 }
 .mg-clip { display: flex; flex-direction: column; gap: .7rem; }
 .mg-clip.is-portrait .reel__media { max-width: none; }
-.mg-clip .reel__media {
-  width: 100%;
-  filter: grayscale(.85) brightness(.92);
-  opacity: .72;
-  transition: filter .45s ease, opacity .45s ease, transform .35s ease,
-              border-color .35s ease, box-shadow .35s ease;
-}
-.mg-clip .reel__media:hover { filter: none; opacity: 1; }
+.mg-clip.is-landscape { grid-column: span 2; }   /* two landscapes fill the 4-col row */
+.mg-clip .reel__media { width: 100%; }
 .mg-clip__label { font-size: .82rem; color: var(--muted); text-align: center; }
 
 @media (max-width: 900px) { .mg-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-/* touch devices have no hover, so show the clips in full colour */
-@media (hover: none) { .mg-clip .reel__media { filter: none; opacity: 1; } }
 
 .reel__frame iframe,
 .reel__frame .placeholder {
