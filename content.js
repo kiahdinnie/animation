@@ -68,9 +68,11 @@ window.SITE = {
     photo: "assets/profile.jpg",
     // Each string below becomes its own paragraph. Write as many as you like.
     paragraphs: [
-      "Write a short intro here — who you are and what you love making. A couple of sentences is plenty.",
-      "Add a second paragraph about your experience: the studios or clients you've worked with, the tools you use (Blender, Maya, Houdini, After Effects, Cinema 4D…), and the kind of work you're looking for.",
-      "Finish with a line about what you're excited to work on next."
+      "Hi! I'm Kiah Dinnie. An animator, motion graphics artist, and 3D generalist based in Johannesburg, South Africa. My passion is in storytelling through motion. I love creating characters and bringing them to life through animation.",
+      "I cut my teeth as a 3D artist but I now work in both 2D and 3D. I'm proficient with After Effects, Blender, Autodesk Maya, and Photoshop. I can design, model, rig, animate, render, and composite.",
+      "I'm available for freelance work or full-time and am willing to relocate.",
+      "No project is too big or too small.",
+      "Let's work together!"
     ],
     // Optional skills list — shown as tags. Delete any you don't want.
     skills: [
