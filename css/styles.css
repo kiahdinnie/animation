@@ -412,6 +412,7 @@ body::before {
 @media (max-width: 900px) { .mg-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 .reel__frame iframe,
+.reel__frame video,
 .reel__frame .placeholder {
   position: absolute;
   inset: 0;
@@ -419,9 +420,12 @@ body::before {
   height: 100%;
   border: 0;
 }
+/* local mp4s fill the frame the same way an embed does */
+.reel__frame video { object-fit: cover; display: block; background: #000; }
 /* the feed video is a preview only — let clicks pass through it to the
    .reel__media handler so "tap to enlarge" opens the lightbox */
-.reel__frame iframe { pointer-events: none; }
+.reel__frame iframe,
+.reel__frame video { pointer-events: none; }
 .placeholder {
   display: grid;
   place-items: center;
@@ -648,7 +652,10 @@ body::before {
 }
 .lightbox__frame.portrait { aspect-ratio: 9 / 16; max-width: 440px; margin-inline: auto; }
 .lightbox__frame.square   { aspect-ratio: 1 / 1;  max-width: 700px; margin-inline: auto; }
-.lightbox__frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.lightbox__frame iframe,
+.lightbox__frame video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+/* full-size viewing: show the whole frame rather than cropping it */
+.lightbox__frame video { object-fit: contain; background: #000; }
 .lightbox__close {
   position: absolute;
   top: -3rem; right: 0;

@@ -9,11 +9,18 @@
 
   /* ---- Helpers ------------------------------------------------------------ */
 
+  // A direct video file — "assets/coke.mp4" and friends — rather than an embed.
+  var FILE_RE = /\.(mp4|m4v|webm|ogv|ogg|mov)(\?.*)?$/i;
+
   // Detect the provider and pull the id (+ Vimeo privacy hash) from a link or id.
-  // Supports Vimeo and YouTube (including Shorts).
+  // Supports local files in /assets, Vimeo and YouTube (including Shorts).
   function parseVideo(entry) {
     var raw = typeof entry === "string" ? entry : (entry.url || entry.id || "");
     var s = String(raw).trim();
+
+    // Local files play in a plain <video>; "id" doubles as the src so the rest
+    // of the pipeline (which tests parsed.id) treats them like any other clip.
+    if (FILE_RE.test(s)) return { provider: "file", id: s, src: s, hash: "" };
 
     var yt = s.match(/(?:youtube\.com\/(?:shorts\/|watch\?v=|embed\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/);
     if (yt) return { provider: "youtube", id: yt[1], hash: "" };
@@ -34,6 +41,7 @@
 
   // Muted, looping, chrome-less "background" player for the feed/grid.
   function backgroundSrc(v) {
+    if (v.provider === "file") return v.src;
     if (v.provider === "youtube") {
       return "https://www.youtube.com/embed/" + v.id +
         "?autoplay=1&mute=1&loop=1&playlist=" + v.id +
@@ -46,6 +54,7 @@
 
   // Full player (sound + controls) for the lightbox.
   function fullSrc(v) {
+    if (v.provider === "file") return v.src;
     if (v.provider === "youtube") {
       return "https://www.youtube.com/embed/" + v.id +
         "?autoplay=1&rel=0&modestbranding=1&playsinline=1";
@@ -251,6 +260,7 @@
     if (!frame || frame.dataset.loaded) return;
     frame.dataset.loaded = "1";
     if (frame.dataset.provider === "youtube") { loadYouTubeBg(frame, frame.dataset.vid); return; }
+    if (frame.dataset.provider === "file") { loadFileBg(frame, frame.dataset.src); return; }
     var iframe = document.createElement("iframe");
     iframe.src = frame.dataset.src;
     iframe.loading = "lazy";
@@ -259,6 +269,23 @@
     iframe.setAttribute("tabindex", "-1");
     iframe.setAttribute("aria-hidden", "true");
     frame.appendChild(iframe);
+  }
+
+  /* ---- Local-file background players ------------------------------------- */
+  // Muted + looping so browsers allow autoplay; a real <video> loops seamlessly,
+  // so none of the YouTube seek-before-the-end trickery below is needed.
+  function loadFileBg(frame, src) {
+    var video = document.createElement("video");
+    video.src = src;
+    video.autoplay = true; video.loop = true; video.muted = true; video.playsInline = true;
+    video.preload = "auto";
+    video.setAttribute("muted", "");
+    video.setAttribute("playsinline", "");
+    video.setAttribute("aria-hidden", "true");
+    video.setAttribute("tabindex", "-1");
+    frame.appendChild(video);
+    var go = video.play();                       // Safari needs the explicit nudge
+    if (go && go.catch) go.catch(function () {});
   }
 
   /* ---- YouTube background players: seamless loop via the IFrame API -------
@@ -346,11 +373,21 @@
     lightboxFrame.className = "lightbox__frame" +
       (orient === "portrait" ? " portrait" : orient === "square" ? " square" : "");
     lightboxFrame.innerHTML = "";
-    var iframe = document.createElement("iframe");
-    iframe.src = fullSrc(parsed);
-    iframe.allow = EMBED_ALLOW;
-    iframe.setAttribute("frameborder", "0");
-    lightboxFrame.appendChild(iframe);
+    if (parsed.provider === "file") {
+      var video = document.createElement("video");
+      video.src = fullSrc(parsed);
+      video.controls = true; video.autoplay = true; video.playsInline = true;
+      video.setAttribute("playsinline", "");
+      lightboxFrame.appendChild(video);
+      var go = video.play();
+      if (go && go.catch) go.catch(function () {});
+    } else {
+      var iframe = document.createElement("iframe");
+      iframe.src = fullSrc(parsed);
+      iframe.allow = EMBED_ALLOW;
+      iframe.setAttribute("frameborder", "0");
+      lightboxFrame.appendChild(iframe);
+    }
     lightbox.classList.add("open");
     document.body.style.overflow = "hidden";
   }

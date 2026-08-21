@@ -12,6 +12,11 @@
    4. Set "orientation" to "landscape" (wide showreels), "portrait" (phone /
       Instagram-reel shape) or "square".
 
+   LOCAL FILES: instead of a link you can point at a video sitting in the
+   /assets folder, e.g. "assets/coke.mp4" — it plays straight from the site
+   (.mp4, .mov, .webm). Keep an eye on file size: everything in /assets is
+   downloaded by the visitor, so big clips make the page slow to load.
+
    Private / unlisted Vimeo videos: the link looks like
    https://vimeo.com/76979871/abc123def — paste the WHOLE thing, the extra code
    after the slash is needed for it to play.
@@ -84,12 +89,12 @@ window.SITE = {
       title: "Motion Graphics",
       style: "grid",
       videos: [
-        { url: "https://youtube.com/shorts/dwhpOgz4q0w", title: "Red Bull",             orientation: "portrait" },
-        { url: "https://youtube.com/shorts/uMaUt9zilvs", title: "Ma Mère",              orientation: "portrait" },
-        { url: "https://youtube.com/shorts/XAAuGHMGWlI", title: "Juicy Bomb Lip Gloss", orientation: "portrait" },
-        { url: "https://youtube.com/shorts/fe8enWwr6XM", title: "Coca-Cola",            orientation: "portrait" },
-        { url: "https://youtu.be/2q55jGEIXiM",           title: "KitchenAid",           orientation: "landscape" },
-        { url: "https://youtu.be/zMzXBJguh6o",           title: "Cadbury",              orientation: "landscape" }
+        { url: "assets/redbull_v04.mp4",         title: "Red Bull",             orientation: "portrait" },
+        { url: "assets/mamere_v01.mp4",          title: "Ma Mère",              orientation: "portrait" },
+        { url: "assets/juicy_lip_gloss_v07.mp4", title: "Juicy Bomb Lip Gloss", orientation: "portrait" },
+        { url: "assets/coke.mp4",                title: "Coca-Cola",            orientation: "portrait" },
+        { url: "https://youtu.be/2q55jGEIXiM",   title: "KitchenAid",           orientation: "landscape" },
+        { url: "https://youtu.be/zMzXBJguh6o",   title: "Cadbury",              orientation: "landscape" }
       ]
     },
     {
