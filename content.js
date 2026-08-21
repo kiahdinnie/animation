@@ -63,11 +63,9 @@ window.SITE = {
     photo: "assets/profile.jpg",
     // Each string below becomes its own paragraph. Write as many as you like.
     paragraphs: [
-      "Hi! I'm Kiah Dinnie. An animator, motion graphics artist, and 3D generalist based in Johannesburg, South Africa. My passion is in storytelling through motion. I love creating characters and bringing them to life through animation.",
-      "I cut my teeth as a 3D artist but I now work in both 2D and 3D. I'm proficient with After Effects, Blender, Autodesk Maya, and Photoshop. I can design, model, rig, animate, render, and composite.",
-      "I'm available for freelance work or full-time and am willing to relocate.",
-      "No project is too big or too small.",
-      "Let's work together!"
+      "Write a short intro here — who you are and what you love making. A couple of sentences is plenty.",
+      "Add a second paragraph about your experience: the studios or clients you've worked with, the tools you use (Blender, Maya, Houdini, After Effects, Cinema 4D…), and the kind of work you're looking for.",
+      "Finish with a line about what you're excited to work on next."
     ],
     // Optional skills list — shown as tags. Delete any you don't want.
     skills: [
@@ -76,27 +74,60 @@ window.SITE = {
     ]
   },
 
-  // ---- YOUR VIDEOS ----------------------------------------------------------
-  // Add or remove { } blocks freely. "orientation" can be "landscape",
-  // "portrait" or "square".
-  videos: [
+  // ---- YOUR WORK ------------------------------------------------------------
+  // The work area is a list of sections. Each section has a title, a style,
+  // and its videos (Vimeo OR YouTube links both work):
+  //   style: "grid"    -> small clips that grey out until you hover over them
+  //   style: "feature" -> a big clip with its title + description beside it
+  sections: [
     {
-      url: "https://vimeo.com/1152648913",
-      title: "Animation Showreel",
-      description: "A 60-second cut of my animations from Netflix, Showmax, various advertising spots, and a short film.",
-      orientation: "landscape"
+      title: "Motion Graphics",
+      style: "grid",
+      videos: [
+        { url: "https://youtube.com/shorts/dwhpOgz4q0w", title: "Red Bull",             orientation: "portrait" },
+        { url: "https://youtube.com/shorts/uMaUt9zilvs", title: "Ma Mère",              orientation: "portrait" },
+        { url: "https://youtube.com/shorts/XAAuGHMGWlI", title: "Juicy Bomb Lip Gloss", orientation: "portrait" },
+        { url: "https://youtube.com/shorts/fe8enWwr6XM", title: "Coca-Cola",            orientation: "portrait" }
+      ]
     },
     {
-      url: "https://vimeo.com/1155750523",
-      title: "Motion Graphics and Product Visualization",
-      description: "I produced all elements of these shots using Blender, After Effects, Photoshop, and Illustrator.",
-      orientation: "landscape"
+      title: "Animation",
+      style: "feature",
+      videos: [
+        {
+          url: "https://vimeo.com/1152648913",
+          title: "Animation Showreel",
+          description: "A 60-second cut of my animations from Netflix, Showmax, various advertising spots, and a short film.",
+          orientation: "landscape"
+        }
+      ]
     },
     {
-      url: "https://vimeo.com/1201552967",
-      title: "Character sculpting and Rigging",
-      description: "Characters sculpted in Blender and rigged in both Blender and Autodesk Maya.",
-      orientation: "landscape"
+      title: "Rigging",
+      style: "feature",
+      videos: [
+        {
+          url: "https://vimeo.com/1201552967",
+          title: "Character sculpting and Rigging",
+          description: "Characters sculpted in Blender and rigged in both Blender and Autodesk Maya.",
+          orientation: "landscape"
+        }
+      ]
     }
+
+    // Your earlier "Motion Graphics and Product Visualization" clip is parked
+    // here — uncomment this whole block to bring it back as its own section:
+    // ,{
+    //   title: "Product Visualization",
+    //   style: "feature",
+    //   videos: [
+    //     {
+    //       url: "https://vimeo.com/1155750523",
+    //       title: "Motion Graphics and Product Visualization",
+    //       description: "I produced all elements of these shots using Blender, After Effects, Photoshop, and Illustrator.",
+    //       orientation: "landscape"
+    //     }
+    //   ]
+    // }
   ]
 };

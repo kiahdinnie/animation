@@ -9,28 +9,36 @@
 
   /* ---- Helpers ------------------------------------------------------------ */
 
-  // Pull a Vimeo id (and optional privacy hash) from a link or bare id.
-  function parseVimeo(entry) {
+  // Detect the provider and pull the id (+ Vimeo privacy hash) from a link or id.
+  // Supports Vimeo and YouTube (including Shorts).
+  function parseVideo(entry) {
     var raw = typeof entry === "string" ? entry : (entry.url || entry.id || "");
     var s = String(raw).trim();
-    var id = "";
-    var hash = (entry && typeof entry === "object" && entry.hash) ? entry.hash : "";
 
+    var yt = s.match(/(?:youtube\.com\/(?:shorts\/|watch\?v=|embed\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/);
+    if (yt) return { provider: "youtube", id: yt[1], hash: "" };
+
+    var hash = (entry && typeof entry === "object" && entry.hash) ? entry.hash : "";
+    var id = "";
     if (/^\d+$/.test(s)) {
       id = s;
     } else {
       var idMatch = s.match(/vimeo\.com\/(?:video\/)?(\d+)/);
       if (idMatch) id = idMatch[1];
-      // hash forms: /video/ID?h=HASH   or   vimeo.com/ID/HASH
       var hashMatch = s.match(/[?&]h=([a-zA-Z0-9]+)/) ||
                       s.match(/vimeo\.com\/(?:video\/)?\d+\/([a-zA-Z0-9]+)/);
       if (hashMatch && !hash) hash = hashMatch[1];
     }
-    return { id: id, hash: hash };
+    return { provider: "vimeo", id: id, hash: hash };
   }
 
-  // Muted, looping, chrome-less "background" player for the feed.
+  // Muted, looping, chrome-less "background" player for the feed/grid.
   function backgroundSrc(v) {
+    if (v.provider === "youtube") {
+      return "https://www.youtube.com/embed/" + v.id +
+        "?autoplay=1&mute=1&loop=1&playlist=" + v.id +
+        "&controls=0&modestbranding=1&rel=0&playsinline=1&disablekb=1&fs=0&iv_load_policy=3";
+    }
     var h = v.hash ? "&h=" + v.hash : "";
     return "https://player.vimeo.com/video/" + v.id +
            "?background=1&autoplay=1&loop=1&muted=1&autopause=0&dnt=1&app_id=58479" + h;
@@ -38,10 +46,16 @@
 
   // Full player (sound + controls) for the lightbox.
   function fullSrc(v) {
+    if (v.provider === "youtube") {
+      return "https://www.youtube.com/embed/" + v.id +
+        "?autoplay=1&rel=0&modestbranding=1&playsinline=1";
+    }
     var h = v.hash ? "&h=" + v.hash : "";
     return "https://player.vimeo.com/video/" + v.id +
            "?autoplay=1&title=0&byline=0&portrait=0&dnt=1&app_id=58479" + h;
   }
+
+  var EMBED_ALLOW = "autoplay; fullscreen; picture-in-picture; encrypted-media; accelerometer; gyroscope; clipboard-write";
 
   function el(tag, cls, html) {
     var e = document.createElement(tag);
@@ -119,60 +133,89 @@
 
   var lightbox, lightboxFrame;
 
-  function buildFeed() {
-    var feed = document.getElementById("reel-feed");
-    if (!feed) return;
+  function normOrient(o) {
+    o = (o || "").toLowerCase();
+    return ["landscape", "portrait", "square"].indexOf(o) === -1 ? "landscape" : o;
+  }
 
-    var videos = (SITE.videos || []).filter(function (v) {
-      return parseVimeo(v).id;
+  // The clickable video card: an autoplay muted preview + click-to-enlarge.
+  function buildMedia(item, parsed, orient, wantHint) {
+    var media = el("div", "reel__media");
+    media.setAttribute("role", "button");
+    media.setAttribute("tabindex", "0");
+    media.setAttribute("aria-label", "Play " + (item.title || "video") + " with sound");
+
+    var frame = el("div", "reel__frame");
+    frame.appendChild(el("div", "placeholder", PLAY_ICON));
+    frame.dataset.src = backgroundSrc(parsed);   // lazy-loaded when scrolled near
+    media.appendChild(frame);
+    if (wantHint) media.appendChild(el("span", "zoom-hint", ENLARGE_ICON + " Tap to enlarge"));
+
+    function open() { openLightbox(parsed, orient); }
+    media.addEventListener("click", open);
+    media.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); }
     });
+    return media;
+  }
 
-    // update the count in the section header
-    var count = document.querySelector("[data-count]");
-    if (count) count.textContent = videos.length ? "(" + videos.length + ")" : "";
+  // A large "feature" row: video with title + description beside it.
+  function buildReel(item, i) {
+    var parsed = parseVideo(item);
+    var orient = normOrient(item.orientation);
+    var reel = el("article", "reel is-" + orient + (i % 2 ? " alt" : ""));
+    var text = el("div", "reel__text");
+    text.appendChild(el("h3", null, escapeHtml(item.title || "Untitled")));
+    if (item.description) text.appendChild(el("p", null, escapeHtml(item.description)));
+    reel.appendChild(buildMedia(item, parsed, orient, true));
+    reel.appendChild(text);
+    return reel;
+  }
 
-    if (!videos.length) {
-      feed.appendChild(el("p", "muted",
-        "No videos yet — add your Vimeo links in <code>content.js</code>."));
+  // A small grid clip (greyed until hover), with an optional label beneath.
+  function buildClip(item) {
+    var parsed = parseVideo(item);
+    var orient = normOrient(item.orientation || "portrait");
+    var clip = el("article", "mg-clip is-" + orient);
+    clip.appendChild(buildMedia(item, parsed, orient, false));
+    if (item.title) clip.appendChild(el("span", "mg-clip__label", escapeHtml(item.title)));
+    return clip;
+  }
+
+  function buildFeed() {
+    var host = document.getElementById("work-sections");
+    if (!host) return;
+
+    var sections = SITE.sections;
+    if (!sections && SITE.videos) {                 // backward compatibility
+      sections = [{ title: "Selected Work", style: "feature", videos: SITE.videos }];
+    }
+    if (!sections || !sections.length) {
+      host.appendChild(el("p", "muted",
+        "No work yet — add sections in <code>content.js</code>."));
       return;
     }
 
-    videos.forEach(function (item, i) {
-      var parsed = parseVimeo(item);
-      var orient = (item.orientation || "landscape").toLowerCase();
-      if (["landscape", "portrait", "square"].indexOf(orient) === -1) orient = "landscape";
+    sections.forEach(function (section) {
+      var vids = (section.videos || []).filter(function (v) { return parseVideo(v).id; });
+      if (!vids.length) return;
 
-      var reel = el("article", "reel is-" + orient + (i % 2 ? " alt" : ""));
+      var sec = el("section", "work-cat");
+      var head = el("div", "section-head");
+      head.appendChild(el("h2", null, escapeHtml(section.title || "")));
+      head.appendChild(el("span", "count", "(" + vids.length + ")"));
+      sec.appendChild(head);
 
-      // media
-      var media = el("div", "reel__media");
-      media.setAttribute("role", "button");
-      media.setAttribute("tabindex", "0");
-      media.setAttribute("aria-label", "Play “" + (item.title || "video") + "” with sound");
-
-      var frame = el("div", "reel__frame");
-      var placeholder = el("div", "placeholder", PLAY_ICON);
-      frame.appendChild(placeholder);
-      frame.dataset.src = backgroundSrc(parsed);   // loaded when scrolled into view
-      media.appendChild(frame);
-      media.appendChild(el("span", "zoom-hint", ENLARGE_ICON + " Tap to enlarge"));
-
-      // clicking opens the full player with sound
-      function open() { openLightbox(parsed, orient); }
-      media.addEventListener("click", open);
-      media.addEventListener("keydown", function (e) {
-        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); }
-      });
-
-      // text
-      var text = el("div", "reel__text");
-      text.appendChild(el("span", "kicker", "Reel " + String(i + 1).padStart(2, "0")));
-      text.appendChild(el("h3", null, escapeHtml(item.title || "Untitled")));
-      if (item.description) text.appendChild(el("p", null, escapeHtml(item.description)));
-
-      reel.appendChild(media);
-      reel.appendChild(text);
-      feed.appendChild(reel);
+      if ((section.style || "feature").toLowerCase() === "grid") {
+        var grid = el("div", "mg-grid");
+        vids.forEach(function (item) { grid.appendChild(buildClip(item)); });
+        sec.appendChild(grid);
+      } else {
+        var feed = el("div", "feed");
+        vids.forEach(function (item, i) { feed.appendChild(buildReel(item, i)); });
+        sec.appendChild(feed);
+      }
+      host.appendChild(sec);
     });
 
     lazyLoadFrames();
@@ -209,7 +252,7 @@
     var iframe = document.createElement("iframe");
     iframe.src = frame.dataset.src;
     iframe.loading = "lazy";
-    iframe.allow = "autoplay; fullscreen; picture-in-picture";
+    iframe.allow = EMBED_ALLOW;
     iframe.setAttribute("frameborder", "0");
     iframe.setAttribute("tabindex", "-1");
     iframe.setAttribute("aria-hidden", "true");
@@ -248,7 +291,7 @@
     lightboxFrame.innerHTML = "";
     var iframe = document.createElement("iframe");
     iframe.src = fullSrc(parsed);
-    iframe.allow = "autoplay; fullscreen; picture-in-picture";
+    iframe.allow = EMBED_ALLOW;
     iframe.setAttribute("frameborder", "0");
     lightboxFrame.appendChild(iframe);
     lightbox.classList.add("open");
@@ -324,21 +367,21 @@
     document.documentElement.setAttribute("data-theme", theme);
   }
 
-  // Is this a Vimeo link/id rather than a local file?
-  function isVimeo(src) {
-    return /vimeo\.com|player\.vimeo/.test(src) || /^\d{6,}$/.test(String(src).trim());
+  // Is this an embed link/id (Vimeo or YouTube) rather than a local file?
+  function isEmbed(src) {
+    return /vimeo\.com|player\.vimeo|youtube\.com|youtu\.be/.test(src) || /^\d{6,}$/.test(String(src).trim());
   }
 
-  // A muted, looping, autoplay background element — a local <video> or a Vimeo embed.
+  // A muted, looping, autoplay background element — a local <video> or an embed.
   function makeBgMedia(src) {
-    if (isVimeo(src)) {
-      var v = parseVimeo(src);
+    if (isEmbed(src)) {
+      var v = parseVideo(src);
       if (!v.id) return null;
       var wrap = document.createElement("div");
       wrap.className = "bg-embed";
       var iframe = document.createElement("iframe");
       iframe.src = backgroundSrc(v);
-      iframe.allow = "autoplay; fullscreen; picture-in-picture";
+      iframe.allow = EMBED_ALLOW;
       iframe.setAttribute("aria-hidden", "true");
       iframe.setAttribute("tabindex", "-1");
       wrap.appendChild(iframe);
